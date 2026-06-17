@@ -527,10 +527,12 @@ setInterval(()=>{
   document.getElementById("time").innerText=new Date().toLocaleTimeString();
 },1000);
 
-/* ================= NOTES WINDOW SYSTEM ================= */
-let notesPages = [];
-let notesCurrentPage = 0;
+/* ================= SHARED NOTES DATA ================= */
+// Use a single pages/currentPage that both the right-panel and the notes window use
+let pages = [];
+let currentPage = 0;
 
+/* ================= NOTES WINDOW SYSTEM ================= */
 function openNotes(){
   document.getElementById("notesWindow").classList.remove("hidden");
   renderNotesWindow();
@@ -544,36 +546,36 @@ function addPageFromWindow(){
   let text = document.getElementById("windowNoteInput").value;
   if(!text.trim()) return;
 
-  notesPages.push(text);
+  pages.push(text);
   document.getElementById("windowNoteInput").value = "";
-  
-  notesCurrentPage = notesPages.length - 1;
+  currentPage = pages.length - 1;
   renderNotesWindow();
+  renderPage(); // update right-panel view
 }
 
 function deleteCurrentPage(){
-  if(notesPages.length === 0) return;
-  
-  notesPages.splice(notesCurrentPage, 1);
-  
-  if(notesCurrentPage >= notesPages.length && notesCurrentPage > 0){
-    notesCurrentPage--;
+  if(pages.length === 0) return;
+  pages.splice(currentPage, 1);
+  if(currentPage >= pages.length && currentPage > 0){
+    currentPage--;
   }
-  
   renderNotesWindow();
+  renderPage();
 }
 
 function nextPageWindow(){
-  if(notesCurrentPage < notesPages.length - 1){
-    notesCurrentPage++;
+  if(currentPage < pages.length - 1){
+    currentPage++;
     renderNotesWindow();
+    renderPage();
   }
 }
 
 function prevPageWindow(){
-  if(notesCurrentPage > 0){
-    notesCurrentPage--;
+  if(currentPage > 0){
+    currentPage--;
     renderNotesWindow();
+    renderPage();
   }
 }
 
@@ -582,16 +584,16 @@ function renderNotesWindow(){
   let info = document.getElementById("pageInfo");
   let input = document.getElementById("windowNoteInput");
 
-  if(notesPages.length === 0){
+  if(pages.length === 0){
     display.innerText = "No pages yet 📝\n\nWrite something and click 'Add Page'";
     display.classList.remove("has-content");
     info.innerText = "No pages";
     input.value = "";
   } else {
-    display.innerText = notesPages[notesCurrentPage];
+    display.innerText = pages[currentPage];
     display.classList.add("has-content");
-    info.innerText = (notesCurrentPage + 1) + " / " + notesPages.length;
-    input.value = "";
+    info.innerText = (currentPage + 1) + " / " + pages.length;
+    input.value = ""; // keep editor separate from current content
   }
 }
 
@@ -713,9 +715,7 @@ function animateEQ(){
   });
 }
 
- let pages = [];
-let currentPage = 0;
-
+/* ================= RIGHT-PANEL NOTES (shared) ================= */
 function addPage(){
   let text = document.getElementById("noteInput").value;
   if(!text) return;
@@ -725,6 +725,7 @@ function addPage(){
 
   currentPage = pages.length - 1;
   renderPage();
+  renderNotesWindow();
 }
 
 function renderPage(){
@@ -742,6 +743,7 @@ function nextPage(){
   if(currentPage < pages.length - 1){
     currentPage++;
     renderPage();
+    renderNotesWindow();
   }
 }
 
@@ -749,6 +751,7 @@ function prevPage(){
   if(currentPage > 0){
     currentPage--;
     renderPage();
+    renderNotesWindow();
   }
 }
 
@@ -758,4 +761,3 @@ renderPage();
 
 </body>
   </html>
-  
