@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> hlo loser - Final Complete</title>
+
+<style>
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:system-ui;
+  overflow:hidden;
+}
+
+/* ================= DESKTOP ================= */
+#desktop{
+  width:100vw;
+  height:100vh;
+  display:none;
+  background:linear-gradient(135deg,#dff6ff,#f7fbff);
+  position:relative;
+  overflow:hidden;
+}
+
+/* ================= TOPBAR ================= */
+#topbar{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:32px;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:0 10px;
+
+  background:rgba(255,255,255,0.55);
+  backdrop-filter:blur(18px);
+
+  font-size:12px;
+  z-index:10;
+}
+
+/* ================= ICONS ================= */
+.icon{
+  position:absolute;
+  width:90px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+}
+
+.tile{
+  width:62px;
+  height:62px;
+
+  border-radius:16px;
+  background:rgba(255,255,255,0.75);
+  backdrop-filter:blur(18px);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:22px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.10);
+}
+
+.icon span{
+  font-size:11px;
+  opacity:0.85;
+}
+
+/* ================= RIGHT PANEL ================= */
+#rightPanel{
+  position:absolute;
+  right:12px;
+  top:42px;
+  bottom:12px;
+
+  width:210px;
+
+  display:grid;
+  grid-template-rows: 1fr 1.3fr 1fr 1fr;
+
+  gap:10px;
+}
+
+/* ================= CARDS ================= */
+.card{
+  background:rgba(255,255,255,0.65);
+  backdrop-filter:blur(18px);
+
+  border-radius:14px;
+  padding:8px;
+
+  font-size:11px;
+
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+
+  overflow:hidden;
+}
+
+/* ================= INPUTS ================= */
+textarea,input{
+  width:100%;
+  font-size:11px;
+  padding:6px;
+
+  border-radius:10px;
+  border:none;
+  outline:none;
+}
+
+.bookPage{
+  margin-top:6px;
+  height:90px;
+
+  background:rgba(255,255,255,0.7);
+  backdrop-filter:blur(18px);
+
+  border-radius:12px;
+  padding:8px;
+
+  font-size:11px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  text-align:center;
+  transition:all 0.3s ease;
+  overflow-y:auto;
+}
+
+/* ================= VOICE ================= */
+.voiceBtns{
+  display:flex;
+  gap:6px;
+}
+
+.voiceBtns button{
+  flex:1;
+  padding:4px;
+  font-size:11px;
+}
+
+.voiceAudio{
+  width:100%;
+  height:22px;
+}
+
+/* voice list */
+#voiceList div{
+  background:rgba(255,255,255,0.75);
+  padding:6px;
+  border-radius:10px;
+  font-size:11px;
+  cursor:pointer;
+  margin-top:5px;
+}
+
+/* ================= MUSIC ================= */
+#cdPlayer{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:8px;
+  border-radius:14px;
+
+  background:rgba(255,255,255,0.65);
+  backdrop-filter:blur(18px);
+}
+
+#cdDisc{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  background:radial-gradient(circle,#fff 20%,#cfd8dc 40%,#90a4ae);
+}
+
+.spin{animation:spin 2s linear infinite;}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+#eq{
+  display:flex;
+  gap:3px;
+  height:14px;
+  align-items:flex-end;
+}
+
+.bar{
+  width:3px;
+  height:5px;
+  background:rgba(0,0,0,0.3);
+  border-radius:2px;
+}
+
+/* ================= LOGIN ================= */
+#login{
+  position:absolute;
+  width:100vw;
+  height:100vh;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  background:linear-gradient(135deg,#e8f7ff,#ffffff);
+}
+
+.loginBox{
+  width:240px;
+  padding:18px;
+
+  border-radius:18px;
+
+  background:rgba(255,255,255,0.6);
+  backdrop-filter:blur(20px);
+
+  text-align:center;
+}
+
+#pass{
+  width:100%;
+  padding:10px;
+  border-radius:30px;
+  border:none;
+  text-align:center;
+}
+
+/* ================= NOTES WINDOW ================= */
+#notesWindow{
+  position:absolute;
+  display:none;
+  width:400px;
+  height:500px;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+
+  background:rgba(255,255,255,0.8);
+  backdrop-filter:blur(20px);
+  border-radius:16px;
+
+  box-shadow:0 20px 60px rgba(0,0,0,0.15);
+  z-index:100;
+
+  flex-direction:column;
+}
+
+#notesWindow.hidden{
+  display:none;
+}
+
+#notesHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 16px;
+  border-bottom:1px solid rgba(0,0,0,0.1);
+  font-weight:600;
+  font-size:13px;
+}
+
+#notesClose{
+  cursor:pointer;
+  font-size:16px;
+  opacity:0.7;
+  transition:opacity 0.2s;
+}
+
+#notesClose:hover{
+  opacity:1;
+}
+
+#notesContent{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  padding:16px;
+  gap:10px;
+  overflow-y:auto;
+}
+
+#noteEditor{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  flex:1;
+}
+
+#windowNoteInput{
+  min-height:300px;
+  resize:vertical;
+  font-family:system-ui;
+  flex:1;
+}
+
+#editorControls{
+  display:flex;
+  gap:6px;
+}
+
+#editorControls button{
+  flex:1;
+  padding:8px;
+  font-size:11px;
+  border:none;
+  border-radius:8px;
+  background:rgba(100,150,255,0.2);
+  cursor:pointer;
+  transition:all 0.2s;
+}
+
+#editorControls button:hover{
+  background:rgba(100,150,255,0.4);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="loginBox">
+    <div>Soft Aero OS</div>
+    <input id="pass" type="password" placeholder="••••••">
+    <button onclick="login()">enter</button>
+  </div>
+</div>
+
+<!-- DESKTOP -->
+<div id="desktop">
+
+<div id="topbar">
+  <div>Soft Aero OS</div>
+  <div id="time"></div>
+</div>
+
+<!-- ICONS -->
+<div class="icon" style="top:70px;left:40px;" onclick="openNotes()">
+  <div class="tile">♡</div>
+  <span>Notes</span>
+</div>
+
+<div class="icon" style="top:170px;left:40px;">
+  <div class="tile">★</div>
+  <span>Files</span>
+</div>
+
+<div class="icon" style="top:270px;left:40px;">
+  <div class="tile">☆</div>
+  <span>Voice</span>
+</div>
+
+<!-- RIGHT PANEL -->
+<div id="rightPanel">
+
+  <!-- VOICE -->
+  <div class="card">
+    🎤 Voice Notes
+
+    <div class="voiceBtns">
+      <button onclick="startRec()">rec</button>
+      <button onclick="stopRec()">save</button>
+      <button onclick="document.getElementById('voiceFile').click()">＋</button>
+    </div>
+
+    <audio id="audio" controls class="voiceAudio"></audio>
+
+    <input type="file" id="voiceFile" accept="audio/*" hidden>
+
+    <div id="voiceList"></div>
+  </div>
+
+  <!-- MUSIC -->
+  <div id="cdPlayer">
+
+    <div id="cdDisc"></div>
+
+    <div id="eq">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+
+    <div id="cdInfo">no song</div>
+
+    <input type="file" id="audioFile" hidden>
+
+    <div>
+      <button onclick="pickSong()">＋</button>
+      <button onclick="toggleCD()">▶</button>
+    </div>
+
+    <audio id="cdAudio"></audio>
+  </div>
+
+  <!-- NOTES -->
+  <div class="card">
+    💌 Quick Note
+
+    <textarea id="quickNote" placeholder="write note..."></textarea>
+
+    <button onclick="saveQuickNote()">save</button>
+
+    <div id="book" class="bookPage"></div>
+  </div>
+
+  <!-- FILES -->
+  <div class="card">
+    📁 Files
+    <input>
+    <textarea></textarea>
+    <button>save</button>
+  </div>
+
+</div>
+
+</div>
+
+<!-- NOTES WINDOW -->
+<div id="notesWindow" class="hidden">
+  <div id="notesHeader">
+    📖 Notes
+    <span id="notesClose" onclick="closeNotes()">✕</span>
+  </div>
+  
+  <div id="notesContent">
+    <div id="noteEditor">
+      <textarea id="windowNoteInput" placeholder="Write your note here..."></textarea>
+      <div id="editorControls">
+        <button onclick="saveWindowNote()">Save</button>
+        <button onclick="clearNote()">Clear</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+/* LOGIN */
+function login(){
+  if(document.getElementById("pass").value==="kyu batau"){
+    document.getElementById("login").style.display="none";
+    document.getElementById("desktop").style.display="block";
+  }
+}
+
+/* CLOCK */
+setInterval(()=>{
+  document.getElementById("time").innerText=new Date().toLocaleTimeString();
+},1000);
+
+/* ================= NOTES SYSTEM ================= */
+let currentNote = "";
+
+/* NOTES WINDOW */
+function openNotes(){
+  document.getElementById("notesWindow").classList.remove("hidden");
+  document.getElementById("windowNoteInput").value = currentNote;
+}
+
+function closeNotes(){
+  document.getElementById("notesWindow").classList.add("hidden");
+}
+
+function saveWindowNote(){
+  currentNote = document.getElementById("windowNoteInput").value;
+  updateQuickNoteDisplay();
+  alert("Note saved!");
+}
+
+function clearNote(){
+  if(confirm("Clear all notes?")){
+    currentNote = "";
+    document.getElementById("windowNoteInput").value = "";
+    updateQuickNoteDisplay();
+  }
+}
+
+/* RIGHT PANEL QUICK NOTE */
+function saveQuickNote(){
+  currentNote = document.getElementById("quickNote").value;
+  updateQuickNoteDisplay();
+  document.getElementById("quickNote").value = "";
+}
+
+function updateQuickNoteDisplay(){
+  let book = document.getElementById("book");
+  if(currentNote.trim()){
+    book.innerText = currentNote;
+  } else {
+    book.innerText = "no notes yet 💭";
+  }
+}
+
+updateQuickNoteDisplay();
+
+/* ================= VOICE SYSTEM ================= */
+let rec;
+let chunks=[];
+let voiceClips=[];
+
+function startRec(){
+  navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+    rec=new MediaRecorder(stream);
+    chunks=[];
+    rec.start();
+
+    rec.ondataavailable=e=>{
+      chunks.push(e.data);
+    };
+  });
+}
+
+function stopRec(){
+  if(!rec) return;
+
+  rec.stop();
+
+  rec.onstop=()=>{
+    let blob=new Blob(chunks,{type:"audio/webm"});
+    let url=URL.createObjectURL(blob);
+
+    addVoice(url,"Recorded");
+
+    document.getElementById("audio").src=url;
+  };
+}
+
+/* 📁 import voice file */
+document.getElementById("voiceFile").addEventListener("change",function(){
+  let file=this.files[0];
+  if(!file) return;
+
+  let url=URL.createObjectURL(file);
+
+  addVoice(url,file.name);
+});
+
+/* 💡 unified add */
+function addVoice(url,name){
+  voiceClips.push({url,name});
+  renderVoice();
+}
+
+/* 📋 render list */
+function renderVoice(){
+  let list=document.getElementById("voiceList");
+  list.innerHTML="";
+
+  voiceClips.forEach((v,i)=>{
+    let d=document.createElement("div");
+    d.innerText="🎧 "+v.name;
+
+    d.onclick=()=>{
+      document.getElementById("audio").src=v.url;
+    };
+
+    list.appendChild(d);
+  });
+}
+
+/* ================= MUSIC ================= */
+let cdPlaying=false,audioCtx,analyser,source,dataArray;
+
+function pickSong(){
+  document.getElementById("audioFile").click();
+}
+
+document.getElementById("audioFile").addEventListener("change",function(){
+  let f=this.files[0];
+  let a=document.getElementById("cdAudio");
+  a.src=URL.createObjectURL(f);
+  document.getElementById("cdInfo").innerText=f.name;
+  setupAudio(a);
+});
+
+function setupAudio(a){
+  audioCtx=new AudioContext();
+  analyser=audioCtx.createAnalyser();
+  source=audioCtx.createMediaElementSource(a);
+  source.connect(analyser);
+  analyser.connect(audioCtx.destination);
+  analyser.fftSize=64;
+  dataArray=new Uint8Array(analyser.frequencyBinCount);
+  animateEQ();
+}
+
+function toggleCD(){
+  let a=document.getElementById("cdAudio");
+  let d=document.getElementById("cdDisc");
+
+  if(!cdPlaying){
+    a.play();
+    cdPlaying=true;
+    d.classList.add("spin");
+    audioCtx.resume();
+  }else{
+    a.pause();
+    cdPlaying=false;
+    d.classList.remove("spin");
+  }
+}
+
+function animateEQ(){
+  requestAnimationFrame(animateEQ);
+  if(!analyser) return;
+
+  analyser.getByteFrequencyData(dataArray);
+
+  document.querySelectorAll(".bar").forEach((b,i)=>{
+    b.style.height=(dataArray[i]/255)*14+"px";
+  });
+}
+
+</script>
+
+</body>
+</html>
